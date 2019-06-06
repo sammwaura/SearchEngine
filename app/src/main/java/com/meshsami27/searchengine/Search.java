@@ -14,7 +14,7 @@ public class Search {
         return search_id;
     }
 
-    public void setSearch_id(int search_id) {
-        this.search_id = search_id;
+    public String getName() {
+        return name;
     }
 }

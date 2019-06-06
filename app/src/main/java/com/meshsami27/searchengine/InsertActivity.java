@@ -50,7 +50,9 @@ public class InsertActivity extends AppCompatActivity {
                     et_name.setError("Please enter your name");
                 } else {
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://search.000webhostapp.com/save.php", new Response.Listener <String>() {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                            "http://enginesearch.000webhostapp.com/save.php",
+                            new Response.Listener <String>() {
                         @Override
                         public void onResponse(String response) {
                             Toast.makeText(InsertActivity.this, "Successfully Saved", Toast.LENGTH_SHORT).show();
