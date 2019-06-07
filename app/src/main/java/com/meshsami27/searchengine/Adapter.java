@@ -15,12 +15,12 @@ import java.util.ArrayList;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> {
     private Context context;
-    private ArrayList<Search> search;
+    private ArrayList<Search> searcher;
 
 
-    public Adapter(Context context, ArrayList<Search> search) {
+    public Adapter(Context context, ArrayList<Search> searcher) {
         this.context = context;
-        this.search = search;
+        this.searcher = searcher;
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -33,28 +33,25 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> {
             tv_name = itemView.findViewById(R.id.name);
             card_item = itemView.findViewById(R.id.card_item);
             mainCard = itemView.findViewById(R.id.mainCard);
-
         }
     }
 
     @NonNull
     @Override
-    public Adapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(context).inflate(R.layout.item_name, parent, false);
         return new CustomViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Adapter.CustomViewHolder holder, int position) {
-        final Search search1 = search.get(position);
-        holder.tv_name.setText(search.get(position).getName());
-
+    public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+        final Search search = searcher.get(position);
+        holder.tv_name.setText(searcher.get(position).getName());
+//        holder.tv_name.setText(search.getName());
     }
 
     @Override
     public int getItemCount() {
-        return search.size();
+        return searcher.size();
     }
-
-
 }

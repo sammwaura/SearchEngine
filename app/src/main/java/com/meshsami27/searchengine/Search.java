@@ -10,6 +10,14 @@ public class Search {
         this.name = name;
     }
 
+    public void setSearch_id(int search_id) {
+        this.search_id = search_id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getSearch_id() {
         return search_id;
     }

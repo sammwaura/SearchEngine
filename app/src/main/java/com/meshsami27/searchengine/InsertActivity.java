@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InsertActivity extends AppCompatActivity {
+
     EditText et_name;
 
     @Override
@@ -43,7 +44,7 @@ public class InsertActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.insert:
-                //save name
+                //save names
                 final String name = et_name.getText().toString().trim();
 
                 if (name.isEmpty()) {
@@ -53,14 +54,14 @@ public class InsertActivity extends AppCompatActivity {
                     StringRequest stringRequest = new StringRequest(Request.Method.POST,
                             "http://enginesearch.000webhostapp.com/save.php",
                             new Response.Listener <String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Toast.makeText(InsertActivity.this, "Successfully Saved", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onResponse(String response) {
+                                    Toast.makeText(InsertActivity.this, "Successfully Saved", Toast.LENGTH_SHORT).show();
 
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                        }
-                    }, new Response.ErrorListener() {
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
@@ -70,14 +71,16 @@ public class InsertActivity extends AppCompatActivity {
                         protected Map <String, String> getParams() {
                             Map <String, String> params = new HashMap <>();
                             params.put("name", name);
+                            System.out.println("######" + name);
                             return params;
                         }
                     };
                     RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                     requestQueue.add(stringRequest);
                 }
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 }

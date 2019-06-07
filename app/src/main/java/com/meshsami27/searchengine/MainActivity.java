@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList <Search> search;
+    ArrayList <Search> searcher;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     FloatingActionButton floatingActionButton;
@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        search = new ArrayList <>();
+        searcher = new ArrayList <>();
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Adapter(MainActivity.this, search);
+        adapter = new Adapter(MainActivity.this, searcher);
         recyclerView.setAdapter(adapter);
 
 
@@ -66,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.show();
 
         System.out.println("%%saving%%");
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://enginesearch.000webhostapp.com/names.php", new Response.Listener <String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                "http://enginesearch.000webhostapp.com/names.php",
+                new Response.Listener <String>() {
             @Override
             public void onResponse(String s) {
                 progressDialog.dismiss();
@@ -77,16 +79,20 @@ public class MainActivity extends AppCompatActivity {
 
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject row = array.getJSONObject(i);
-                        Search search1 = new Search(
+                        Search search = new Search(
                                 row.getInt("name_id"),
-                                row.getString("names")
+                                row.getString("name")
                         );
-                        search.add(search1);
+
+                        searcher.add(search);
                     }
+
                     adapter.notifyDataSetChanged();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
