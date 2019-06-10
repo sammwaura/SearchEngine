@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -30,11 +32,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList <Search> searcher;
-    RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    private ArrayList<Search> searcherList;
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
     FloatingActionButton floatingActionButton;
-    private RecyclerView.Adapter searcherFilter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         searcher = new ArrayList <>();
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Adapter(MainActivity.this, searcher);
-        recyclerView.setAdapter(adapter);
-
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new Adapter(MainActivity.this, searcher);
+        mRecyclerView.setAdapter(mAdapter);
 
 
         floatingActionButton = findViewById(R.id.add);
@@ -73,9 +73,13 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_search, menu);
 
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        final MenuItem search = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) search.getActionView();
+        search(searchView);
+        return true;
+    }
 
+    private void search(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -84,11 +88,23 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                adapter.getFilter().filter(newText);
-                return false;
+                newText = newText.toLowerCase();
+                ArrayList<Search> newList = new ArrayList <>();
+
+                    for (Search search : searcher){
+
+                        String name = search.getName().toLowerCase();
+
+                        if (name.contains(newText)){
+
+                            newList.add(search);
+                        }
+                    }
+
+                return true;
+
             }
         });
-        return true;
     }
 
     private void retrieveNames() {
@@ -118,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                         searcher.add(search);
                     }
 
-                    adapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -134,9 +150,5 @@ public class MainActivity extends AppCompatActivity {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         requestQueue.add(stringRequest);
-    }
-
-    public RecyclerView.Adapter getFilter() {
-        return searcherFilter;
     }
 }

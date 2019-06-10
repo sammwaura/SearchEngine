@@ -18,17 +18,15 @@ import java.util.ArrayList;
 public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> implements Filterable {
     private Context context;
     private ArrayList<Search> searcher;
-    private ArrayList<Search> searcherList;
+    private ArrayList<Search> searcherFiltered;
 
 
-    public Adapter(Context context, ArrayList<Search> searcher) {
+    public Adapter(Context context, ArrayList <Search> searcher) {
         this.context = context;
         this.searcher = searcher;
-        searcherList = new ArrayList <>(searcher);
+        searcherFiltered = new ArrayList <>(searcher);
 
     }
-
-
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name;
@@ -64,37 +62,41 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
 
     @Override
     public Filter getFilter() {
-        return searcherFilter;
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+
+                if (charString.isEmpty()){
+
+                    searcherFiltered = searcher;
+                } else {
+                    ArrayList<Search> filteredList = new ArrayList <>();
+
+                    for (Search search : searcher){
+
+                        if (search.getName().toLowerCase().contains(charString)){
+
+                            filteredList.add(search);
+                        }
+                    }
+
+                    searcherFiltered = filteredList;
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = searcherFiltered;
+
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                searcherFiltered = (ArrayList<Search>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
-    private Filter searcherFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            ArrayList<Search> filteredList = new ArrayList <>();
-
-
-            if (constraint == null || constraint.length() == 0 ){
-                filteredList.addAll(searcherList);
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (Search search : searcherList){
-                    if (search.getName().toLowerCase().contains(filterPattern)){
-                        filteredList.add(search);
-                    }
-                }
-            }
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            searcher.clear();
-            searcher.addAll((ArrayList) results.values);
-            notifyDataSetChanged();
-        }
-    };
 }
