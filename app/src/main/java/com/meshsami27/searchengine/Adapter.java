@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,19 +18,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
     private Context context;
     private ArrayList<Search> searcher;
     private ArrayList<Search> searcherFiltered;
+    private AdapterListener listener;
 
-
-    public Adapter(Context context, ArrayList <Search> searcher) {
-        this.context = context;
-        this.searcher = searcher;
-        searcherFiltered = new ArrayList <>(searcher);
-
-    }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name;
         public CardView card_item;
         public RelativeLayout mainCard;
+
+
 
         public CustomViewHolder(View itemView) {
             super(itemView);
@@ -39,6 +34,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
             card_item = itemView.findViewById(R.id.card_item);
             mainCard = itemView.findViewById(R.id.mainCard);
         }
+    }
+
+    public Adapter(Context context, ArrayList <Search> searcher, AdapterListener listener) {
+        this.context = context;
+        this.searcher = searcher;
+        this.listener = listener;
+        this.searcherFiltered = searcher;
+
     }
 
     @NonNull
@@ -50,14 +53,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        final Search search = searcher.get(position);
-        holder.tv_name.setText(searcher.get(position).getName());
-//        holder.tv_name.setText(search.getName());
+        final Search search = searcherFiltered.get(position);
+//        holder.tv_name.setText(searcher.get(position).getName());
+        holder.tv_name.setText(search.getName());
     }
 
     @Override
     public int getItemCount() {
-        return searcher.size();
+        return searcherFiltered.size();
     }
 
     @Override
@@ -65,18 +68,18 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
         return new Filter() {
 
             @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
+            protected FilterResults performFiltering(CharSequence constraint) {
+                ArrayList<Search> filteredList = new ArrayList <>();
 
-                if (charString.isEmpty()){
+                if (constraint == null || constraint.length() == 0){
+                    filteredList.addAll(searcher);
 
-                    searcherFiltered = searcher;
                 } else {
-                    ArrayList<Search> filteredList = new ArrayList <>();
+                    String filterPattern = constraint.toString().toLowerCase().trim();
 
                     for (Search search : searcher){
 
-                        if (search.getName().toLowerCase().contains(charString)){
+                        if (search.getName().toLowerCase().contains(filterPattern)){
 
                             filteredList.add(search);
                         }
@@ -92,11 +95,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
             }
 
             @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
+            protected void publishResults(CharSequence charSequence, FilterResults results) {
                 searcherFiltered = (ArrayList<Search>) results.values;
                 notifyDataSetChanged();
             }
         };
     }
+
+    public interface AdapterListener {
+        void onSearchSelected(Search search);
+    }
+
+
 
 }

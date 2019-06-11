@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">SearchEngine</string>
     <string name="user_name">Your Name</string>
+    <string name="search_hint">Type name…</string>
+    <string name="action_search">Search</string>
+
+
 </resources>
