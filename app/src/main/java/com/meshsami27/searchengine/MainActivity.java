@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements Adapter.AdapterLi
         retrieveNames();
     }
 
-
-
     private void retrieveNames() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Retrieving names....");
@@ -123,30 +121,21 @@ public class MainActivity extends AppCompatActivity implements Adapter.AdapterLi
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                mAdapter.getFilter().filter(query);
+                MainActivity.this.mAdapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                mAdapter.getFilter().filter(newText);
+//                MainActivity.this.mAdapter.getFilter().filter(newText);
                 return false;
             }
         });
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_search){
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

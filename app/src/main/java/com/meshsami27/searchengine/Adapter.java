@@ -20,12 +20,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
     private ArrayList<Search> searcherFiltered;
     private AdapterListener listener;
 
-
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name;
         public CardView card_item;
         public RelativeLayout mainCard;
-
 
 
         public CustomViewHolder(View itemView) {
@@ -95,7 +93,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> impl
             }
 
             @Override
-            protected void publishResults(CharSequence charSequence, FilterResults results) {
+            protected void publishResults(CharSequence constraint, FilterResults results) {
                 searcherFiltered = (ArrayList<Search>) results.values;
                 notifyDataSetChanged();
             }
