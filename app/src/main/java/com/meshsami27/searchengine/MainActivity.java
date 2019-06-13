@@ -125,13 +125,13 @@ public class MainActivity extends AppCompatActivity implements Adapter.AdapterLi
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                MainActivity.this.mAdapter.getFilter().filter(query);
+                ((Adapter)mAdapter).getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                MainActivity.this.mAdapter.getFilter().filter(newText);
+                ((Adapter)mAdapter).getFilter().filter(newText);
                 return false;
             }
         });
